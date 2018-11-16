@@ -1,22 +1,22 @@
 version: '2'
 
 services:
-  monerod:
+  aeond:
     build: .
-    command: --stagenet --data-dir /monero --non-interactive
+    command: --data-dir /aeon --non-interactive
     volumes:
-      # /monero in container should eventually contain the contents of the folder .bitmonero
-      - <path_to_contents_of_.bitmonero>:/monero
+      # /aeon in container should eventually contain the lmdb folder
+      - <path_to_contents_of_lmdb>:/aeon
     ports:
-      - "38080:38080"
-      - "38081:38081"
+      - "11180:11180"
+      - "11181:11181"
     environment:
       - USER_ID=1000
       - P2P_BIND_IP=0.0.0.0
-      - P2P_BIND_PORT=38080
+      - P2P_BIND_PORT=11180
       - LOG_LEVEL=0
       - RPC_BIND_IP=0.0.0.0
-      - RPC_BIND_PORT=38081
+      - RPC_BIND_PORT=11181
     restart: unless-stopped
     logging:
       driver: "json-file"

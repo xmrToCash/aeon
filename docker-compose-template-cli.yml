@@ -3,15 +3,17 @@ version: '2'
 services:
   aeon-cli:
     build: .
-    command: aeon-wallet-cli --daemon-port 11181 --daemon-host localhost --wallet-file aeon_real
+    command: aeon-wallet-cli --wallet-file aeon_real
     network_mode: "host"
     volumes:
-      - ~/Aeon/wallets/aeon_real:/aeon
+      - <path/to/and/including/wallet_folder>:/aeon
     stdin_open: true
     tty: true
     environment:
       - USER_ID=1000
-      - LOG_LEVEL=2
+      - LOG_LEVEL=0
+      - DAEMON_HOST=<host>
+      - DAEMON_PORT=11181
     logging:
       driver: "json-file"
       options:
