@@ -33,7 +33,7 @@ RUN git clone https://github.com/ncopa/su-exec.git su-exec-clone \
     && cp su-exec /data
 
 ARG AEON_URL=https://github.com/aeonix/aeon.git
-ARG BRANCH=v0.12.6.0-aeon
+ARG BRANCH=v0.12.8.0-aeon
 ARG BUILD_PATH=/aeon/build/release/bin
 
 RUN cd /data \
