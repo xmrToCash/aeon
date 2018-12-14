@@ -33,7 +33,7 @@ RUN git clone https://github.com/ncopa/su-exec.git su-exec-clone \
     && cp su-exec /data
 
 ARG AEON_URL=https://github.com/aeonix/aeon.git
-ARG BRANCH=master
+ARG BRANCH
 ARG BUILD_PATH=/aeon/build/release/bin
 
 RUN cd /data \
@@ -94,6 +94,11 @@ RUN chmod +x /entrypoint.sh \
 
 
 WORKDIR /aeon
+
+RUN aeond --version > version.txt \
+    && cat /etc/os-release > system.txt \
+    && ldd $(command -v aeond) > dependencies.txt
+
 VOLUME ["/aeon"]
 
 ENV USER_ID 1000
