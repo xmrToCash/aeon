@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        BRANCH: master
+        BRANCH: v0.12.8.0-aeon
     command: aeon-wallet-cli --wallet-file aeon_real
     network_mode: "host"
     volumes:
