@@ -2,7 +2,11 @@ version: '2'
 
 services:
   aeon-cli:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BRANCH: master
     command: aeon-wallet-cli --wallet-file aeon_real
     network_mode: "host"
     volumes:

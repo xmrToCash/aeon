@@ -2,7 +2,11 @@ version: '2'
 
 services:
   aeond:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BRANCH: master
     command: --data-dir /aeon --non-interactive
     volumes:
       # /aeon in container should eventually contain the lmdb folder
