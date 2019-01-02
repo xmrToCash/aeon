@@ -95,9 +95,9 @@ RUN chmod +x /entrypoint.sh \
 
 WORKDIR /aeon
 
-RUN aeond --version > version.txt \
-    && cat /etc/os-release > system.txt \
-    && ldd $(command -v aeond) > dependencies.txt
+RUN aeond --version > /version.txt \
+    && cat /etc/os-release > /system.txt \
+    && ldd $(command -v aeond) > /dependencies.txt
 
 VOLUME ["/aeon"]
 
