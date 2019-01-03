@@ -2,9 +2,9 @@
 
 if [ "$RELEASE_BRANCH" == "$SOURCE_BRANCH" ]; then
   curl -X POST \
-       -F token=$AEON_TESTNET_TOKEN \
-       -F ref=$SOURCE_BRANCH \
-       $AEON_TESTNET_URL
+       -F token=$AEON_DAEMON_TOKEN \
+       -F ref=$BRANCH_TEST \
+       $AEON_DAEMON_URL
 elif [ "$PATCHED_BRANCH" == "$SOURCE_BRANCH" ]; then
   curl -X POST \
        -F token=$AEON_DAEMON_TOKEN \
