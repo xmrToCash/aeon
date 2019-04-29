@@ -27,18 +27,18 @@ RUN apt-get update -qq && apt-get -y install \
     && make \
     && mv libg* /usr/lib/
 
-RUN git clone https://github.com/ncopa/su-exec.git su-exec-clone \
-    && cd su-exec-clone \
+RUN git clone--single-branch --depth 1 https://github.com/ncopa/su-exec.git su-exec.git \
+    && cd su-exec.git \
     && make \
     && cp su-exec /data
 
 ARG AEON_URL=https://github.com/aeonix/aeon.git
 ARG BRANCH
-ARG BUILD_PATH=/aeon/build/release/bin
+ARG BUILD_PATH=/aeon.git/build/release/bin
 
 RUN cd /data \
-    && git clone -b "$BRANCH" --single-branch --depth 1 --recursive $AEON_URL
-RUN cd aeon \
+    && git clone -b "$BRANCH" --single-branch --depth 1 --recursive $AEON_URL aeon.git
+RUN cd aeon.git \
     && USE_SINGLE_BUILDDIR=1 make \
     && mv /data$BUILD_PATH/aeond /data/ \
     && chmod +x /data/aeond \
@@ -69,8 +69,8 @@ RUN apt-get purge -y \
     && apt-get autoremove --purge -y \
     && apt-get clean \
     && rm -rf /var/tmp/* /tmp/* /var/lib/apt \
-    && rm -rf /data/aeon \
-    && rm -rf /data/su-exec-clone
+    && rm -rf /data/aeon.git \
+    && rm -rf /data/su-exec.git
 
 FROM debian:stable-slim
 COPY --from=builder /data/aeond /usr/local/bin/

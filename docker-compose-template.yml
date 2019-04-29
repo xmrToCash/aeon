@@ -14,6 +14,8 @@ services:
     ports:
       - "11180:11180"
       - "11181:11181"
+      # - "21181:21181"  # testnet
+      # - "31181:31181"  # stagenet
     environment:
       - USER_ID=1000
       - P2P_BIND_IP=0.0.0.0
