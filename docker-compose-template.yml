@@ -6,7 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        BRANCH: master
+        BRANCH: v0.13.0.0-aeon
+        DEBIAN_VERSION: "stable-20191014-slim"
     command: --data-dir /aeon --non-interactive
     volumes:
       # /aeon in container should eventually contain the lmdb folder
@@ -21,8 +22,12 @@ services:
       - P2P_BIND_IP=0.0.0.0
       - P2P_BIND_PORT=11180
       - LOG_LEVEL=0
+      - RPC_USER=""
+      - RPC_PASSWD=""
       - RPC_BIND_IP=0.0.0.0
       - RPC_BIND_PORT=11181
+      - USE_TORSOCKS=NO
+      - USE_TOR=NO
     restart: unless-stopped
     logging:
       driver: "json-file"

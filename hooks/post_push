@@ -1,26 +1,7 @@
 #!/bin/bash
 
-if [ "$RELEASE_BRANCH" == "$SOURCE_BRANCH" ]; then
-  curl -X POST \
-       -F token=$AEON_DAEMON_TOKEN \
-       -F ref=$BRANCH_TEST \
-       $AEON_DAEMON_URL
-elif [ "$PATCHED_BRANCH" == "$SOURCE_BRANCH" ]; then
-  curl -X POST \
-       -F token=$AEON_DAEMON_TOKEN \
-       -F ref=$BRANCH_MAIN \
-       $AEON_DAEMON_URL
-  curl -X POST \
-       -F token=$AEON_DAEMON_TOKEN \
-       -F ref=$BRANCH_STAGE \
-       $AEON_DAEMON_URL
-else
-  # other branches are also pushed as most_recent_tag
-  BRANCH=$(curl -s https://api.github.com/repos/aeonix/aeon/tags | grep -i name | awk 'NR==1{print $2}' | tr -d "\",")
-  if [ -z "$BRANCH" ];then
-    echo "no branch could be found."
-    exit 1
-  fi
-  docker tag $IMAGE_NAME $DOCKER_REPO:$BRANCH
-  docker push $DOCKER_REPO:$BRANCH
+MOST_RECENT_TAG=$(curl -s https://api.github.com/repos/aeonix/aeon/tags | grep -i name | awk 'NR==1{print $2}' | tr -d "\",")
+if [ "$MOST_RECENT_TAG" = "$DOCKER_TAG" ]; then
+  docker tag $IMAGE_NAME $DOCKER_REPO:most_recent_tag
+  docker push $DOCKER_REPO:most_recent_tag
 fi
