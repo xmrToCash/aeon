@@ -238,8 +238,8 @@ ENV LDFLAGS='-static-libstdc++'
 
 # COPY patch.diff /data
 
-RUN cd /data \
-    && git clone --branch "$BRANCH" --single-branch --depth 1 --recursive $AEON_URL aeon.git > /dev/null \
+RUN echo "\e[32mcloning: $PROJECT_URL on branch: $BRANCH\e[39m" \
+    && git clone --branch "$BRANCH" --single-branch --depth 1 --recursive $PROJECT_URL aeon.git > /dev/null \
     && cd aeon.git || exit 1 \
     # && echo "\e[32mapplying version patch\e[39m" \
     # && git apply --stat ../patch.diff \
