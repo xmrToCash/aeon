@@ -40,7 +40,7 @@ RUN apt-get update -qq && apt-get --no-install-recommends -yqq install \
         unzip > /dev/null \
     && cd /data || exit 1 \
     && echo "\e[32mbuilding: su-exec\e[39m" \
-    && git clone --branch ${SUEXEC_VERSION} --single-branch --depth 1 --shallow-submodules https://github.com/ncopa/su-exec.git su-exec.git > /dev/null \
+    && git clone --branch ${SUEXEC_VERSION} --single-branch --depth 1 https://github.com/ncopa/su-exec.git su-exec.git > /dev/null \
     && cd su-exec.git || exit 1 \
     && test `git rev-parse HEAD` = ${SUEXEC_HASH} || exit 1 \
     && make > /dev/null \
@@ -111,7 +111,7 @@ RUN echo "\e[32mbuilding: Openssl\e[39m" \
     && rm -rf /data/openssl-${OPENSSL_VERSION}.tar.gz \
     && echo "\e[32mbuilding: ZMQ\e[39m" \
     && set -ex \
-    && git clone --branch ${ZMQ_VERSION} --single-branch --depth 1 --shallow-submodules https://github.com/zeromq/libzmq.git > /dev/null \
+    && git clone --branch ${ZMQ_VERSION} --single-branch --depth 1 https://github.com/zeromq/libzmq.git > /dev/null \
     && cd libzmq || exit 1 \
     && test `git rev-parse HEAD` = ${ZMQ_HASH} || exit 1 \
     && ./autogen.sh > /dev/null \
@@ -123,7 +123,7 @@ RUN echo "\e[32mbuilding: Openssl\e[39m" \
     && rm -rf /data/libzmq \
     && echo "\e[32mbuilding: zmq.hpp\e[39m" \
     && set -ex \
-    && git clone --branch ${CPPZMQ_VERSION} --single-branch --depth 1 --shallow-submodules https://github.com/zeromq/cppzmq.git > /dev/null \
+    && git clone --branch ${CPPZMQ_VERSION} --single-branch --depth 1 https://github.com/zeromq/cppzmq.git > /dev/null \
     && cd cppzmq || exit 1 \
     && test `git rev-parse HEAD` = ${CPPZMQ_HASH} || exit 1 \
     && mv *.hpp $BASE_DIR/include \
@@ -143,7 +143,7 @@ RUN echo "\e[32mbuilding: Openssl\e[39m" \
     && rm -rf readline-${READLINE_VERSION}.tar.gz \
     && echo "\e[32mbuilding: Sodium\e[39m" \
     && set -ex \
-    && git clone --branch ${SODIUM_VERSION} --single-branch --depth 1 --shallow-submodules https://github.com/jedisct1/libsodium.git > /dev/null \
+    && git clone --branch ${SODIUM_VERSION} --single-branch --depth 1 https://github.com/jedisct1/libsodium.git > /dev/null \
     && cd libsodium || exit 1 \
     && test `git rev-parse HEAD` = ${SODIUM_HASH} || exit 1 \
     && ./autogen.sh \
@@ -178,7 +178,7 @@ ENV LDFLAGS='-static-libstdc++'
 
 RUN echo "\e[32mbuilding: Udev\e[39m" \
     && set -ex \
-    && git clone --branch ${UDEV_VERSION} --single-branch --depth 1 --shallow-submodules https://github.com/gentoo/eudev > /dev/null \
+    && git clone --branch ${UDEV_VERSION} --single-branch --depth 1 https://github.com/gentoo/eudev > /dev/null \
     && cd eudev || exit 1 \
     && test `git rev-parse HEAD` = ${UDEV_HASH} || exit 1 \
     && ./autogen.sh \
@@ -189,7 +189,7 @@ RUN echo "\e[32mbuilding: Udev\e[39m" \
     && rm -rf /data/eudev \
     && echo "\e[32mbuilding: Libusb\e[39m" \
     && set -ex \
-    && git clone --branch ${USB_VERSION} --single-branch --depth 1 --shallow-submodules https://github.com/libusb/libusb.git > /dev/null \
+    && git clone --branch ${USB_VERSION} --single-branch --depth 1 https://github.com/libusb/libusb.git > /dev/null \
     && cd libusb || exit 1 \
     && test `git rev-parse HEAD` = ${USB_HASH} || exit 1 \
     && ./autogen.sh > /dev/null \
@@ -200,7 +200,7 @@ RUN echo "\e[32mbuilding: Udev\e[39m" \
     && rm -rf /data/libusb \
     && echo "\e[32mbuilding: Hidapi\e[39m" \
     && set -ex \
-    && git clone --branch ${HIDAPI_VERSION} --single-branch --depth 1 --shallow-submodules https://github.com/signal11/hidapi > /dev/null \
+    && git clone --branch ${HIDAPI_VERSION} --single-branch --depth 1 https://github.com/signal11/hidapi > /dev/null \
     && cd hidapi || exit 1 \
     && test `git rev-parse HEAD` = ${HIDAPI_HASH} || exit 1 \
     && ./bootstrap \
@@ -211,7 +211,7 @@ RUN echo "\e[32mbuilding: Udev\e[39m" \
     && rm -rf /data/hidapi \
     && echo "\e[32mbuilding: Protobuf\e[39m" \
     && set -ex \
-    && git clone --branch ${PROTOBUF_VERSION}  --single-branch --depth 1 --shallow-submodules https://github.com/protocolbuffers/protobuf > /dev/null \
+    && git clone --branch ${PROTOBUF_VERSION}  --single-branch --depth 1 https://github.com/protocolbuffers/protobuf > /dev/null \
     && cd protobuf || exit 1 \
     && test `git rev-parse HEAD` = ${PROTOBUF_HASH} || exit 1 \
     && git submodule update --init --recursive > /dev/null \
@@ -239,7 +239,7 @@ ENV LDFLAGS='-static-libstdc++'
 # COPY patch.diff /data
 
 RUN echo "\e[32mcloning: $PROJECT_URL on branch: $BRANCH\e[39m" \
-    && git clone --branch "$BRANCH" --single-branch --depth 1 --recursive --shallow-submodules $PROJECT_URL aeon.git > /dev/null \
+    && git clone --branch "$BRANCH" --single-branch --depth 1 --recursive $PROJECT_URL aeon.git > /dev/null \
     && cd aeon.git || exit 1 \
     # && echo "\e[32mapplying version patch\e[39m" \
     # && git apply --stat ../patch.diff \
