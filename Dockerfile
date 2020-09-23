@@ -1,6 +1,11 @@
 ARG DEBIAN_VERSION="${DEBIAN_VERSION:-stable-slim}"
 FROM debian:${DEBIAN_VERSION} as dependencies1
 
+LABEL author="norman.moeschter@gmail.com" \
+      maintainer="norman.moeschter@gmail.com" \
+      version="v1.0.1" \
+      update="2020-09-05"
+
 WORKDIR /data
 
 #su-exec
@@ -36,6 +41,7 @@ RUN apt-get update -qq && apt-get --no-install-recommends -yqq install \
         automake \
         bzip2 \
         xsltproc \
+        docbook-xsl \
         gperf \
         unzip > /dev/null \
     && cd /data || exit 1 \
@@ -77,8 +83,9 @@ WORKDIR /data
 ENV BASE_DIR /usr/local
 
 # OpenSSL
-ARG OPENSSL_VERSION=1.1.1b
-ARG OPENSSL_HASH=5c557b023230413dfb0756f3137a13e6d726838ccd1430888ad15bfb2b43ea4b
+ARG OPENSSL_VERSION=1.1.1
+ARG OPENSSL_FIX=g
+ARG OPENSSL_HASH=ddb04774f1e32f0c49751e21b67216ac87852ceb056b75209af2443400636d46
 # ZMQ
 ARG ZMQ_VERSION=v4.3.2
 ARG ZMQ_HASH=a84ffa12b2eb3569ced199660bac5ad128bff1f0
@@ -98,17 +105,18 @@ ENV LDFLAGS='-static-libstdc++'
 
 RUN echo "\e[32mbuilding: Openssl\e[39m" \
     && set -ex \
-    && curl -s -O https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz > /dev/null \
-    && echo "${OPENSSL_HASH}  openssl-${OPENSSL_VERSION}.tar.gz" | sha256sum -c \
-    && tar -xzf openssl-${OPENSSL_VERSION}.tar.gz > /dev/null \
-    && cd openssl-${OPENSSL_VERSION} || exit 1 \
+    && curl -s -O https://www.openssl.org/source/openssl-${OPENSSL_VERSION}${OPENSSL_FIX}.tar.gz > /dev/null \
+    # && curl -s -O https://www.openssl.org/source/old/${OPENSSL_VERSION}/openssl-${OPENSSL_VERSION}${OPENSSL_FIX}.tar.gz > /dev/null \
+    && echo "${OPENSSL_HASH}  openssl-${OPENSSL_VERSION}${OPENSSL_FIX}.tar.gz" | sha256sum -c \
+    && tar -xzf openssl-${OPENSSL_VERSION}${OPENSSL_FIX}.tar.gz > /dev/null \
+    && cd openssl-${OPENSSL_VERSION}${OPENSSL_FIX} || exit 1 \
     && ./Configure --prefix=$BASE_DIR linux-x86_64 no-shared --static "$CFLAGS" > /dev/null \
     && make build_generated > /dev/null \
     && make libcrypto.a > /dev/null \
     && make install > /dev/null \
     && cd /data || exit 1 \
-    && rm -rf /data/openssl-${OPENSSL_VERSION} \
-    && rm -rf /data/openssl-${OPENSSL_VERSION}.tar.gz \
+    && rm -rf /data/openssl-${OPENSSL_VERSION}${OPENSSL_FIX} \
+    && rm -rf /data/openssl-${OPENSSL_VERSION}${OPENSSL_FIX}.tar.gz \
     && echo "\e[32mbuilding: ZMQ\e[39m" \
     && set -ex \
     && git clone --branch ${ZMQ_VERSION} --single-branch --depth 1 https://github.com/zeromq/libzmq.git > /dev/null \
@@ -182,7 +190,7 @@ RUN echo "\e[32mbuilding: Udev\e[39m" \
     && cd eudev || exit 1 \
     && test `git rev-parse HEAD` = ${UDEV_HASH} || exit 1 \
     && ./autogen.sh \
-    && ./configure --prefix=$BASE_DIR --disable-gudev --disable-introspection --disable-hwdb --disable-manpages --disable-shared > /dev/null \
+    && ./configure --prefix=$BASE_DIR --disable-introspection --disable-hwdb --disable-manpages --disable-shared > /dev/null \
     && make > /dev/null \
     && make install > /dev/null \
     && cd /data || exit 1 \
@@ -231,6 +239,7 @@ WORKDIR /data
 ARG PROJECT_URL=https://github.com/aeonix/aeon.git
 ARG BRANCH=master
 ARG BUILD_PATH=/aeon.git/build/release/bin
+ARG BUILD_BRANCH=$BRANCH
 
 ENV CFLAGS='-fPIC -O1'
 ENV CXXFLAGS='-fPIC -O1'
@@ -239,8 +248,10 @@ ENV LDFLAGS='-static-libstdc++'
 # COPY patch.diff /data
 
 RUN echo "\e[32mcloning: $PROJECT_URL on branch: $BRANCH\e[39m" \
-    && git clone --branch "$BRANCH" --single-branch --depth 1 --recursive $PROJECT_URL aeon.git > /dev/null \
+    && git clone -n --branch "$BRANCH" --single-branch --depth 1 --recursive $PROJECT_URL aeon.git > /dev/null \
     && cd aeon.git || exit 1 \
+    && git checkout "$BUILD_BRANCH" \
+    && git submodule update --init --force \
     # && echo "\e[32mapplying version patch\e[39m" \
     # && git apply --stat ../patch.diff \
     # && git apply --check ../patch.diff \
